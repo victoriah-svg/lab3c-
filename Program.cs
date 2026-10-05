@@ -6,7 +6,7 @@ namespace posts
     {
         static void Main(string[] args)
         {
-            // int i = 0;
+            int i = 0;
             string? name;
             string? text;
 
@@ -20,6 +20,13 @@ namespace posts
                 Console.WriteLine("1. Skriv i gästboken");
                 Console.WriteLine("2. Ta bort inlägg");
                 Console.WriteLine("X. Avsluta");
+                
+                i= 0; 
+                //Skriver ut poster från listan 
+                foreach(Post post in manage.GetPosts())
+                {
+                    Console.WriteLine($"[ {i++} ] {post.Name} - {post.PostText}");
+                }
 
                int input = (int)Console.ReadKey(true).Key;
 
