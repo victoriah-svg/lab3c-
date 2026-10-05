@@ -12,7 +12,9 @@ namespace posts
 
 
 
-            PostManage manage = new PostManage(); //objekt av postmanage 
+           // PostManage manage = new PostManage(); //objekt av postmanage 
+           IPostStorage management = new JsonPostStorage("poststore.json");
+           PostManage manage = new PostManage(management);
             while (true)
             {
                 Console.Clear(); //rensa konsoll
@@ -27,12 +29,12 @@ namespace posts
                 {
                     Console.WriteLine($"[ {i++} ] {post.Name} - {post.PostText}");
                 }
-
+                //läser in värdet på tangenten 
                int input = (int)Console.ReadKey(true).Key;
 
                 switch (input)
                 {
-                    case '1':
+                    case '1': //val nr 1
                         //körs alltid minst en gång
                         do
                         {

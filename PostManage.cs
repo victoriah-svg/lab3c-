@@ -2,14 +2,17 @@ namespace posts
 {
     public class PostManage
     {
-        private List<Post> posts;
+        private readonly IPostStorage storage; // Referens till objekt som implementerar IPostStorage
+        private List<Post> posts; //Referens till lista med Post-objekt
 
-        //Konstruktor 
-        public PostManage()
+
+        public PostManage(IPostStorage storage)
         {
-            posts = new List<Post>();
+            this.storage = storage;
+            posts = storage.Load();
         }
 
+        //Lägg till poster
         public Post AddPost(string name, string postText)
         {
             Post newPost = new Post(); //skapar instans av Post
@@ -18,12 +21,14 @@ namespace posts
             newPost.PostText = postText;
             posts.Add(newPost);//lägger till i listan posts 
             //anropa metod från interface för att spara i jsonfil här
+            storage.Save(posts);
             return newPost;
         }
 
+        //Hämta poster
         public List<Post> GetPosts()
         {
-            return posts;
+            return posts; //returnerar listan med posts
         }
     }
 
