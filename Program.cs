@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
+* Författare: Victoria Helin
+* Datum 2026-10-05
+* Kurs: Programmering i C# .NET DT071G
+* 
+* Beskrivning: 
+* Programmet ger användaren möjlighet att skapa och radera inlägg i en gästbok.
+* Inläggen sparas via serializering till json-format.
+*/
+
+using System;
+using System.Linq.Expressions;
 
 namespace posts
 {
@@ -6,15 +17,19 @@ namespace posts
     {
         static void Main(string[] args)
         {
-            int i = 0;
+            int i = 0; 
             string? name;
             string? text;
+            string? index;
 
 
 
-           // PostManage manage = new PostManage(); //objekt av postmanage 
-           IPostStorage management = new JsonPostStorage("poststore.json");
-           PostManage manage = new PostManage(management);
+            //lagrar referenst till objekt av JsonPostStorage i variabeln management
+            IPostStorage management = new JsonPostStorage("poststore.json");
+            //Skickar in referensen i konstruktorn för PostManage
+            PostManage manage = new PostManage(management);
+
+            //Oändlig loop (avslutas när någon avslutar programmet genom att klicka X-tangenten)
             while (true)
             {
                 Console.Clear(); //rensa konsoll
@@ -22,16 +37,18 @@ namespace posts
                 Console.WriteLine("1. Skriv i gästboken");
                 Console.WriteLine("2. Ta bort inlägg");
                 Console.WriteLine("X. Avsluta");
-                
-                i= 0; 
+
+                i = 0;
+
                 //Skriver ut poster från listan 
-                foreach(Post post in manage.GetPosts())
+                foreach (Post post in manage.GetPosts())
                 {
                     Console.WriteLine($"[ {i++} ] {post.Name} - {post.PostText}");
                 }
                 //läser in värdet på tangenten 
-               int input = (int)Console.ReadKey(true).Key;
+                int input = (int)Console.ReadKey(true).Key;
 
+                //Kontroll vilket tangentval som gjorts
                 switch (input)
                 {
                     case '1': //val nr 1
@@ -49,6 +66,7 @@ namespace posts
 
                         } while (string.IsNullOrWhiteSpace(name)); //sålänge som namn är tomt eller whitespace
 
+                        //loop som körs minst 1 gång och så länge text är tomt 
                         do
                         {
                             Console.WriteLine("Skriv ditt inlägg: ");
@@ -64,18 +82,38 @@ namespace posts
 
                         //När namn och text är korrekt ifyllt anropas AddPost med name och text som fyllts i 
                         Post addedPost = manage.AddPost(name, text);
-                        Console.WriteLine(addedPost.Name);
-                        Console.WriteLine(addedPost.PostText);
                         break;
 
-                    case '2':
-                        Console.WriteLine("Du har valt nr 2");
-                        Console.ReadKey();
+                    case '2': //val nr 2
+
+                        //loopn som körs minst 1 gång och så länge som index är tomt
+                        do
+                        {
+                            Console.WriteLine("Vilket index vill du radera?");
+                            index = Console.ReadLine();
+                            
+                            if (string.IsNullOrWhiteSpace(index)) //om index är tomt skriv ut felmeddelande
+                            {
+                                Console.WriteLine("Du måste ange ett index");
+                            }
+                            else //annars - försök konvertera index till int 
+                            {
+                                try {
+                                    manage.DeletePost(Convert.ToInt32(index));
+                                }catch(Exception) //om indexet ej matchar så skriv ut felmeddelande 
+                                {
+                                    Console.WriteLine("Indexet du valt finns inte. Klicka på någon tangen och börja om");
+                                    Console.ReadLine();
+                                }
+                            }
+                        } while (string.IsNullOrWhiteSpace(index));
+
                         break;
 
-                    case 88:
-                        Environment.Exit(0);
+                    case 88: //val X
+                        Environment.Exit(0); //Avsluta programm
                         break;
+
                 }
 
 

@@ -25,11 +25,13 @@ namespace posts
             //Om filen finns så läs filen som en json-sträng
             string jsonString = File.ReadAllText(file);
 
-            //returnera den deserializerade jsonsträngen eller tom lista om ej funkar
+            //returnera den deserializerade jsonsträngen eller tom lista om det ej gick att deserializera
             return JsonSerializer.Deserialize<List<Post>>(jsonString) ?? new List<Post>();
 
         }
-        public void Save(List<Post> posts)
+
+        //Spara poster
+        public void Save(List<Post> posts) //tar emot lista av Post som argument
         {
             //Serializera till jsonformat
             string jsonString = JsonSerializer.Serialize(posts);
